@@ -29,7 +29,7 @@ class ReconicliationClient
     
   end
 
-  alias_method :find, :get
+  alias_method :match, :get
 
   def socket
     @socket ||= TCPSocket.open @host, @port

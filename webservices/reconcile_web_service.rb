@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'sinatra'
-require File.dirname(__FILE__) + '/lib/taxon_finder_client'
-require File.dirname(__FILE__) + '/lib/neti_taxon_finder_client'
+require File.dirname(__FILE__) + '/lib/recon_client'
+# require File.dirname(__FILE__) + '/lib/neti_taxon_finder_client'
 require 'nokogiri'
 require 'uri'
 require 'open-uri'
@@ -20,39 +20,52 @@ set :show_exceptions, false
 get '/' do
   "Taxon Name Finding API, documentation at http://code.google.com/p/taxon-name-processing"
 end
-get '/find' do
+
+get '/match' do
   # @@client = TaxonFinderClient.new 'localhost' 
-  @@client = NetiTaxonFinderClient.new 'localhost' 
+  # @@client = NetiTaxonFinderClient.new 'localhost' 
+  @@client = ReconicliationClient.new 'localhost' 
+  puts "=" * 80
+  # print "params = %s" % params.inspect
+  # params = {"url1"=>"http://localhost/text_good.txt", "url2"=>"http://localhost/text_bad.txt"}
+
   format = @@valid_formats.include?(params[:format]) ? params[:format] : "xml"
+  # puts format
   begin
-    content = params[:text] || params[:url] || params[:encodedtext] || params[:encodedurl]
+    content1 = params[:text1] || params[:url1] || params[:encodedtext1] || params[:encodedurl1]
+    content2 = params[:text2] || params[:url2] || params[:encodedtext2] || params[:encodedurl2]
   rescue
     status 400
   end
-  content = URI.unescape content
+  
+  print "content1 = %s, content2 = %s\n" % [content1.inspect, content2.inspect]
+  
+  content1 = URI.unescape content1
+  content2 = URI.unescape content2
   # decode if it's encoded
-  content = Base64::decode64 content if params[:encodedtext] || params[:encodedurl]
+  content1 = Base64::decode64 content1 if params[:encodedtext] || params[:encodedurl]
+  content2 = Base64::decode64 content2 if params[:encodedtext] || params[:encodedurl]
   # scrape if it's a url
-  if params[:encodedurl] || params[:url]
-    begin
-      response = open(content)
-      pure_text = open(content).read
-    rescue
-      status 400
-    end
-    content = pure_text if pure_text
-    # use nokogiri only for HTML, because otherwise it stops on OCR errors
-    # content = Nokogiri::HTML(response).content if pure_text.include?("<html>")    
-    content = Nokogiri::HTML(response).content if (pure_text && pure_text.include?("<html>"))    
-  end
-  names = @@client.find(content)
-
-  if format == 'json'
-    content_type 'application/json', :charset => 'utf-8'
-    return Hash.from_xml("#{to_xml(names)}").to_json
-  end
-  content_type 'text/xml', :charset => 'utf-8'
-  to_xml(names)
+  # if params[:encodedurl] || params[:url]
+  #   begin
+  #     response = open(content)
+  #     pure_text = open(content).read
+  #   rescue
+  #     status 400
+  #   end
+  #   content = pure_text if pure_text
+  #   # use nokogiri only for HTML, because otherwise it stops on OCR errors
+  #   # content = Nokogiri::HTML(response).content if pure_text.include?("<html>")    
+  #   content = Nokogiri::HTML(response).content if (pure_text && pure_text.include?("<html>"))    
+  # end
+  # names = @@client.find(content)
+  # 
+  # if format == 'json'
+  #   content_type 'application/json', :charset => 'utf-8'
+  #   return Hash.from_xml("#{to_xml(names)}").to_json
+  # end
+  # content_type 'text/xml', :charset => 'utf-8'
+  # to_xml(names)
 end
 
 def to_xml(names)
