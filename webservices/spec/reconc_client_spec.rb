@@ -22,17 +22,26 @@ TEST_URL = 'http://www.bacterio.cict.fr/d/desulfotomaculum.html'
         @good_list = "Atys sandersoni"
         @bad_URL   = "http://localhost/text_bad.txt"
         @good_URL  = "http://localhost/text_good.txt" 
+        @long_URL  = "http://localhost/pictorialgeo.txt"
         # /Users/anna/work/reconcile-app/webservices/public/ 
         # @text = URI.escape 'first we find Mus musculus and then we find M. musculus again'
       end
       
-      it "should return match" do
+      it "should take data and return text from firts file" do
         # get "/find?text1=#{@bad_list}&text2=#{@good_list}"
         # content1 = "http://localhost/text_good.txt", content2 = "http://localhost/text_bad.txt"
         # http://localhost:4567/match?url1=http://localhost/text_good.txt&url2=http://localhost/text_bad.txt
         get "/match?url1=#{@bad_URL}&url2=#{@good_URL}"
-        last_response.body.should == include("Atys sandersoni")
+        last_response.body.should include("AHYS SANDERSONI")
       end    
+
+      # it "should return match" do
+      #   # get "/find?text1=#{@bad_list}&text2=#{@good_list}"
+      #   # content1 = "http://localhost/text_good.txt", content2 = "http://localhost/text_bad.txt"
+      #   # http://localhost:4567/match?url1=http://localhost/text_good.txt&url2=http://localhost/text_bad.txt
+      #   get "/match?url1=#{@bad_URL}&url2=#{@good_URL}"
+      #   last_response.body.should == include("Ahys sandersoni--->Atys sandersoni")
+      # end    
 
       # it "should return a verbatim name when a valid species name is identified in text" do
       #   get "/find?text=#{@text}"

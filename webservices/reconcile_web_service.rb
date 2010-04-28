@@ -38,7 +38,7 @@ get '/match' do
     status 400
   end
   
-  print "content1 = %s, content2 = %s\n" % [content1.inspect, content2.inspect]
+  # print "content1 = %s, content2 = %s\n" % [content1.inspect, content2.inspect]
   
   content1 = URI.unescape content1
   content2 = URI.unescape content2
@@ -46,26 +46,40 @@ get '/match' do
   content1 = Base64::decode64 content1 if params[:encodedtext] || params[:encodedurl]
   content2 = Base64::decode64 content2 if params[:encodedtext] || params[:encodedurl]
   # scrape if it's a url
-  # if params[:encodedurl] || params[:url]
-  #   begin
-  #     response = open(content)
-  #     pure_text = open(content).read
-  #   rescue
-  #     status 400
-  #   end
-  #   content = pure_text if pure_text
-  #   # use nokogiri only for HTML, because otherwise it stops on OCR errors
-  #   # content = Nokogiri::HTML(response).content if pure_text.include?("<html>")    
-  #   content = Nokogiri::HTML(response).content if (pure_text && pure_text.include?("<html>"))    
-  # end
-  # names = @@client.find(content)
+  if params[:encodedurl1] || params[:url1] || params[:encodedurl2] || params[:url12]
+    begin
+      response1 = open(content1)
+      pure_text1 = open(content1).read
+      response2 = open(content2)
+      pure_text2 = open(content2).read
+    rescue
+      status 400
+    end
+    content1 = pure_text1 if pure_text1
+    content2 = pure_text2 if pure_text2
+    # use nokogiri only for HTML, because otherwise it stops on OCR errors
+    # content = Nokogiri::HTML(response).content if pure_text.include?("<html>")    
+    content1 = Nokogiri::HTML(response1).content1 if (pure_text1 && pure_text1.include?("<html>"))    
+    content2 = Nokogiri::HTML(response2).content2 if (pure_text2 && pure_text2.include?("<html>"))    
+  end
+  # print "content1 = %s, content2 = %s\n" % [content1.inspect, content2.inspect]
+  
+  content = content1 + "&&&EOF&&&" + content2     
+  
+  # names1 = @@client.match(content1)
+  # names2 = @@client.match(content2)
+  # print "names1 = %s, names2 = %s\n" % [names1.inspect, names2.inspect]
+  names = @@client.match(content)
   # 
-  # if format == 'json'
-  #   content_type 'application/json', :charset => 'utf-8'
-  #   return Hash.from_xml("#{to_xml(names)}").to_json
-  # end
+  if format == 'json'
+    content_type 'application/json', :charset => 'utf-8'
+    return Hash.from_xml("#{to_xml(names)}").to_json
+  end
+  
   # content_type 'text/xml', :charset => 'utf-8'
   # to_xml(names)
+  content_type 'text/HTML', :charset => 'utf-8'
+  "<html><head></head><body>"+names+"</body>"
 end
 
 def to_xml(names)

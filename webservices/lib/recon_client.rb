@@ -23,7 +23,7 @@ class ReconicliationClient
       output = output + socket.read(1024)
     end
   
-    socket.close 
+    # socket.close 
 
     @matches = output.gsub("\t","\n") #if output
     

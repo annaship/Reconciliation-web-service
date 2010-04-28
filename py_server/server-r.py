@@ -11,6 +11,9 @@ class MyTCPHandler(SocketServer.StreamRequestHandler):
     def handle(self):
         # self.request is the TCP socket connected to the client
         total_data = []
+        conn = self.request
+        conn_name = conn.getpeername()
+        print "Connected %s" % conn_name[1]
         while 1:
 	            data = self.request.recv(1024)
 							# mystery: doesn't work without printing out that
@@ -20,11 +23,13 @@ class MyTCPHandler(SocketServer.StreamRequestHandler):
 	                break
 	            total_data.append(data)
         t_data = ''.join(total_data)
-
+        text1, text2 = t_data.split("&&&EOF&&&")
+        # print "text1 = %s, text2 = %s" % (text1, text2)
         # just send back the same data, but upper-cased, for some reason doesn't work properly with "\n", 
         # so need a change "\n"/"\t" and back in Python and Ruby
         time.sleep(2)
-        self.request.send(t_data.replace("\n","\t").upper())
+        self.request.send(text1.replace("\n","\t").upper())
+        print "Connection %s closed." % conn_name[1]
 
 if __name__ == "__main__":
     HOST, PORT = "localhost", 1234
