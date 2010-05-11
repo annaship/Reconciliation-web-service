@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/spec_helper'
 require 'uri'
 require 'base64'
-require 'fakeweb'
+# require 'fakeweb'
 
 TEST_URL = 'http://www.bacterio.cict.fr/d/desulfotomaculum.html'
 # FakeWeb.allow_net_connect = false
@@ -18,21 +18,22 @@ TEST_URL = 'http://www.bacterio.cict.fr/d/desulfotomaculum.html'
 
     describe "text tests" do
       before :all do
-        @bad_list  = "Atys sajidersoni\nAhys sandersoni"
-        @good_list = "Atys sandersoni"
         @bad_URL   = "http://localhost/text_bad.txt"
         @good_URL  = "http://localhost/text_good.txt" 
         @long_URL  = "http://localhost/pictorialgeo.txt"
         # /Users/anna/work/reconcile-app/webservices/public/ 
-        # @text = URI.escape 'first we find Mus musculus and then we find M. musculus again'
+        @text1 = URI.escape "Atys sajidersoni\nAhys sandersoni"
+        @text2 = URI.escape "Atys sandersoni"
       end
       
-      it "should take data and return text from firts file" do
-        # get "/find?text1=#{@bad_list}&text2=#{@good_list}"
-        # content1 = "http://localhost/text_good.txt", content2 = "http://localhost/text_bad.txt"
-        # http://localhost:4567/match?url1=http://localhost/text_good.txt&url2=http://localhost/text_bad.txt
+      it "should take url and return text from firts file" do
         get "/match?url1=#{@bad_URL}&url2=#{@good_URL}"
         last_response.body.should include("AHYS SANDERSONI")
+      end    
+
+      it "should take both texts and return data from firts one" do
+        get "/match?text1=#{@text1}&text2=#{@text2}"
+        last_response.body.should include("ATYS SAJIDERSONI")
       end    
 
       # it "should return match" do
@@ -284,4 +285,4 @@ TEST_URL = 'http://www.bacterio.cict.fr/d/desulfotomaculum.html'
     # end
 end
 
-FakeWeb.allow_net_connect = true
+# FakeWeb.allow_net_connect = true

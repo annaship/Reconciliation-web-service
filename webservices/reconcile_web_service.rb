@@ -34,17 +34,20 @@ get '/match' do
   begin
     content1 = params[:text1] || params[:url1] || params[:encodedtext1] || params[:encodedurl1]
     content2 = params[:text2] || params[:url2] || params[:encodedtext2] || params[:encodedurl2]
+    print "1) content1 = %s, content2 = %s\n" % [content1.inspect, content2.inspect]
   rescue
     status 400
   end
   
-  # print "content1 = %s, content2 = %s\n" % [content1.inspect, content2.inspect]
+  print "2) content1 = %s, content2 = %s\n" % [content1.inspect, content2.inspect]
   
   content1 = URI.unescape content1
   content2 = URI.unescape content2
+  print "3) content1 = %s, content2 = %s\n" % [content1.inspect, content2.inspect]
   # decode if it's encoded
   content1 = Base64::decode64 content1 if params[:encodedtext] || params[:encodedurl]
   content2 = Base64::decode64 content2 if params[:encodedtext] || params[:encodedurl]
+  print "4) content1 = %s, content2 = %s\n" % [content1.inspect, content2.inspect]
   # scrape if it's a url
   if params[:encodedurl1] || params[:url1] || params[:encodedurl2] || params[:url12]
     begin
@@ -57,6 +60,7 @@ get '/match' do
     end
     content1 = pure_text1 if pure_text1
     content2 = pure_text2 if pure_text2
+    print "5) content1 = %s, content2 = %s\n" % [content1.inspect, content2.inspect]
     # use nokogiri only for HTML, because otherwise it stops on OCR errors
     # content = Nokogiri::HTML(response).content if pure_text.include?("<html>")    
     content1 = Nokogiri::HTML(response1).content1 if (pure_text1 && pure_text1.include?("<html>"))    
@@ -64,6 +68,7 @@ get '/match' do
   end
   # print "content1 = %s, content2 = %s\n" % [content1.inspect, content2.inspect]
   
+  print "6) content1 = %s, content2 = %s\n" % [content1.inspect, content2.inspect]
   content = content1 + "&&&EOF&&&" + content2     
   
   # names1 = @@client.match(content1)

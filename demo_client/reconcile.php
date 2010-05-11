@@ -34,28 +34,14 @@ $taxon_finder_web_service_url = "http://localhost:4567";
 
 //sort out what type of content the user has submitted
 
+if ($_POST["url1"] && $_POST["url2"])
 
-if ($_POST["url1"]) {
-  $content = "url1";
+{
+  $content = "url";
   $url1 = $_POST["url1"];
-	echo "</b><br /><p />1 = ".$content;
-	echo "</b><br /><p />url1 = ".$url1;
-}
-
-if ($_POST["url2"]) {
-  $content = "url2";
   $url2 = $_POST["url2"];
-	echo "</b><br /><p />2 = ".$content;
-	echo "</b><br /><p />url2 = ".$url2;
 }
 
-// 
-// //user specified URL
-// if ($_POST["url"]) {
-//   $content = "url";
-//   $url = $_POST["url"];
-// }
-// 
 // //example URL
 // if (($_POST["url_e"]) && ($_POST["url_e"] != "none")) {
 //   $content = "url";
@@ -65,36 +51,48 @@ if ($_POST["url2"]) {
 // }
 
 //user specified freetext
-if ($_POST["freetext"]) {
+if ($_POST["freetext1"] && $_POST["freetext2"]) {
   $content = "text";
-  $freetext = $_POST["freetext"];
-	echo "</b><br /><p />4 = ".$content;
-	echo "</b><br /><p />freetext = ".$freetext;
+  $freetext1 = $_POST["freetext1"];
+  $freetext2 = $_POST["freetext2"];
+	// echo "</b><br /><p />4 = ".$content;
+	echo "</b><br /><p />freetext1 = ".$freetext1;
+	echo "</b><br /><p />freetext2 = ".$freetext2;
 }
 
 //deal with the uploaded file ** make sure the tmp directory has the correct permissions for this script to write to **
-$upload1 = @$_FILES["upload"];
+// print_r(@$_FILES["upload2"]);
+$upload1 = @$_FILES["upload1"];
+$upload2 = @$_FILES["upload2"];
 
 // echo "5 = HERE";
 
-if($upload1['name']) {
+if($upload1['name'] && $upload2['name']) {
   $upload_file = true;
   echo "<p align='center'><b>Reading ".$upload1['name']."</b></p>";
+  echo "<p align='center'><b>Reading ".$upload2['name']."</b></p>";
   flush();
-  $copylocation = "tmp/".$upload1['name'];
-  if(file_exists($copylocation)) {
-    unlink($copylocation);
+  $copylocation1 = "tmp/".$upload1['name'];
+  $copylocation2 = "tmp/".$upload2['name'];
+  if(file_exists($copylocation1) && file_exists($copylocation2)) {
+    unlink($copylocation1);
+    unlink($copylocation2);
     }
-  copy ($upload1['tmp_name'], $copylocation);
+  copy ($upload1['tmp_name'], $copylocation1);
+  copy ($upload2['tmp_name'], $copylocation2);
 
 
 // build the url to pass to the url function of the taxonfinder webservice
   $current_dir = preg_replace('/\?.*$/', '', $_SERVER['REQUEST_URI']);
   $current_dir = 'http://'.$_SERVER['HTTP_HOST'].'/'.ltrim(dirname($current_dir), '/').'/';
-  $url1 = $current_dir."/tmp/".$upload1['name'];
+  $url1 = $current_dir."tmp/".$upload1['name'];
   unset($upload1);
-  $content = "url1";
-  echo "URA</b><br /><p />".$content;
+  $url2 = $current_dir."tmp/".$upload2['name'];
+  unset($upload2);
+  $content = "url";
+  echo "URA here<br /><p />".$content;
+  echo "URA here, url1 = <br /><p />".$url1;
+  echo "URA here, url2 = <br /><p />".$url2;
 
 }
 
@@ -175,23 +173,25 @@ if ($content)
 
 $time_start = microtime(true);
 
- if ($content == "url1") {
+ if ($content == "url") {
    $xml = simplexml_load_file("$taxon_finder_web_service_url/match?url1=$url1&url2=$url2");
-   echo "URA, $content == \"url1\" </b><br /><p />".$xml;
+   echo "URA, $content == \"url\" </b><br /><p />".$xml;
    if ($upload_file)
    {
      //dump the uploaded file now that we've used it.
-     unlink($copylocation);
+     unlink($copylocation1);
+     unlink($copylocation2);
    }
    else
    {
-   echo "<p><b>Reading <a href=$url1 target='new'>$url1</a></b> </p>";
+	   echo "<p><b>Reading <a href=$url1 target='new'>$url1</a></b> </p>";
+	   echo "<p><b>Reading <a href=$url2 target='new'>$url2</a></b> </p>";
    }
   }
  elseif ($content == "text") 
  {
-   $xml = simplexml_load_file("$taxon_finder_web_service_url/match?url1=$url1&url2=$url2");
-   echo "URA, $content == \"text\" </b><br /><p />".$xml;
+   $xml = simplexml_load_file("$taxon_finder_web_service_url/match?text1=$freetext1&text2=$freetext2");
+   // echo "URA, $content == \"text\" </b><br /><p />".$xml;
  }
  
 //parse the xml response and move it to an array
@@ -216,15 +216,15 @@ $time_start = microtime(true);
           <b>Time:&nbsp;".round($time, 2)." sec</b><br /><br /><br />";
 
 ?>
-      <table class='nice' width=900>
+      <table class='nice' width=900 border = 1>
         <tr>
-          <th>Verbatim String (as appears in text)</th>
-          <th>Scientific name</th>
+          <th>Names to compare</th><th></th>
+          <th>Scientific names</th>
         </tr>   
 <?php       
 //print each verbatim name and scientific name string in the table
       foreach( $possible_names as $vern_name => $sci_name){
-      	echo "<tr><td>$vern_name</td><td>$sci_name</td></tr>";
+      	echo "<tr><td>$vern_name</td><td>---></td><td>$sci_name</td></tr>";
       }       
     }
 ?>
