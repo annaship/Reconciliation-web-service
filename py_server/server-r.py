@@ -17,7 +17,7 @@ class MyTCPHandler(SocketServer.StreamRequestHandler):
         while 1:
 	            data = self.request.recv(1024)
 							# mystery: doesn't work without printing out that
-	            print data
+	            # print data
 	            if len(data) < 1024:
 	                total_data.append(data)
 	                break
@@ -28,7 +28,9 @@ class MyTCPHandler(SocketServer.StreamRequestHandler):
         # just send back the same data, but upper-cased, for some reason doesn't work properly with "\n", 
         # so need a change "\n"/"\t" and back in Python and Ruby
         time.sleep(2)
-        self.request.send(text1.replace("\n","\t").upper())
+        reconciliation_res = text1.replace("\n","\t").upper()
+        print "reconciliation_res = %s\n" % reconciliation_res
+        self.request.send(reconciliation_res)
         print "Connection %s closed." % conn_name[1]
 
 if __name__ == "__main__":
@@ -37,6 +39,7 @@ if __name__ == "__main__":
     # Create the server, binding to localhost on port 1234
     server = SocketServer.TCPServer((HOST, PORT), MyTCPHandler)
 
+    print "Server run"
     # Activate the server; this will keep running until you
     # interrupt the program with Ctrl-C
     server.serve_forever()

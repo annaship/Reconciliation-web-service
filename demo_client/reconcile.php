@@ -34,16 +34,19 @@ $taxon_finder_web_service_url = "http://localhost:4567";
 
 //sort out what type of content the user has submitted
 
+
 if ($_POST["url1"]) {
   $content = "url1";
   $url1 = $_POST["url1"];
-	echo "1 = ".$content;
+	echo "</b><br /><p />1 = ".$content;
+	echo "</b><br /><p />url1 = ".$url1;
 }
 
 if ($_POST["url2"]) {
   $content = "url2";
   $url2 = $_POST["url2"];
-	echo "2 = ".$content;
+	echo "</b><br /><p />2 = ".$content;
+	echo "</b><br /><p />url2 = ".$url2;
 }
 
 // 
@@ -53,24 +56,26 @@ if ($_POST["url2"]) {
 //   $url = $_POST["url"];
 // }
 // 
-//example URL
-if (($_POST["url_e"]) && ($_POST["url_e"] != "none")) {
-  $content = "url";
-  $url = $_POST["url_e"];
-	echo "3 = ".$content;
-}
+// //example URL
+// if (($_POST["url_e"]) && ($_POST["url_e"] != "none")) {
+//   $content = "url";
+//   $url = $_POST["url_e"];
+// 	echo "</b><br /><p />3 = ".$content;
+// 	echo "</b><br /><p />url = ".$url;
+// }
 
 //user specified freetext
 if ($_POST["freetext"]) {
   $content = "text";
   $freetext = $_POST["freetext"];
-	echo "4 = ".$content;
+	echo "</b><br /><p />4 = ".$content;
+	echo "</b><br /><p />freetext = ".$freetext;
 }
-
-echo "5 = HERE";
 
 //deal with the uploaded file ** make sure the tmp directory has the correct permissions for this script to write to **
 $upload1 = @$_FILES["upload"];
+
+// echo "5 = HERE";
 
 if($upload1['name']) {
   $upload_file = true;
@@ -98,61 +103,66 @@ if($upload1['name']) {
     if (!$content)
     {
       ?>
-        <table width="272" border="0" cellspacing="2" cellpadding="">
-                <form action='recognize.php' METHOD='POST' ENCTYPE='multipart/form-data'>
-                <tr>
-                        <td>
+        <!-- <table width="272" border="0" cellspacing="2" cellpadding=""> -->
+                <form action='reconcile.php' METHOD='POST' ENCTYPE='multipart/form-data'>
+                <!-- <tr> -->
+                        <!-- <td> -->
                                         <table width="468" height='350' border="0" cellspacing="2" cellpadding="0">
+																<th>
+																	<td>List to compare</td><td></td><td>Master list</td>
+																</th>
                                 <tr>
                                     <td width=120>Upload File 1:</td>
-                                    <td><INPUT TYPE=file NAME=upload1 SIZE=50 ACCEPT=text></td></tr>
-                                <tr>
+                                    <td><INPUT TYPE=file NAME=upload1 SIZE=50 ACCEPT=text></td>
                                     <td width=120>Upload File 2:</td>
                                     <td><INPUT TYPE=file NAME=upload2 SIZE=50 ACCEPT=text></td></tr>
                                 <tr>
                                     <td>Enter URL 1:</td>
-                                    <td><input type=text size=80 name=url1></td></tr>
-                                <tr>
+                                    <td><input type=text size=81 name=url1></td>
                                     <td>Enter URL 2:</td>
-                                    <td><input type=text size=80 name=url2></td></tr>
-                                <tr>
+                                    <td><input type=text size=81 name=url2></td></tr>
+                                <!-- <tr>
                                     <td>Example URLs:</td>
                                     <td>
                                         <select name=url_e size='1'>";
                         <?php           
-                                                $file = file("../test-data/testpages.txt");
-                                                $num = count($file);
-                                                echo "<option value='none'>- - Choose an example URL - -</option>\n";
-                                                for($i=0 ; $i<$num ; $i++)
-                                                {
-                                                    $example=trim($file[$i]);
-                                                    if (strlen($example)>4){
-                                                    $option = explode("\t", $example, 2);
-                                                    if (count($option)>1){
-                                                                echo "<option value='".trim($option[0])."'>".substr($option[1],0,88)."</option>\n";
-                                                    }else{
-                                                                echo "<option value='".trim($option[0])."'>".substr($option[0],0,88)."</option>\n";
-                                                    }
-                                                    }
-                                                }
+                                                // $file = file("../test-data/testpages.txt");
+                                                // $num = count($file);
+                                                // echo "<option value='none'>- - Choose an example URL - -</option>\n";
+                                                // for($i=0 ; $i<$num ; $i++)
+                                                // {
+                                                //     $example=trim($file[$i]);
+                                                //     if (strlen($example)>4){
+                                                //     $option = explode("\t", $example, 2);
+                                                //     if (count($option)>1){
+                                                //                 echo "<option value='".trim($option[0])."'>".substr($option[1],0,88)."</option>\n";
+                                                //     }else{
+                                                //                 echo "<option value='".trim($option[0])."'>".substr($option[0],0,88)."</option>\n";
+                                                //     }
+                                                //     }
+                                                // }
                         ?>              
                                 </select>
-                                </td></tr>
+                                </td></tr> -->
                                 <tr>
                                     <td>Enter Free Text:</td>
-                                    <td><textarea rows='3' cols='78' name='freetext'></textarea></td>
+                                    <td><textarea rows='3' cols='70' name='freetext1'></textarea></td>
+                                    <td>Enter Free Text:</td>
+                                    <td><textarea rows='3' cols='70' name='freetext2'></textarea></td>
                                 </tr>
-                                <tr><td></td>
+                                <tr>
+																		<td></td><td></td>
                                     <td><input type=submit value='Submit'></td>
                                 </tr>
                         </table>
-                        </td>
-                        <td>
+                        <!-- </td>
+                        <td> -->
                         <input type=hidden name=func value=submit>
                         </form>
-                        </td>
-                </tr>
-        </table><?php
+                        <!-- </td>
+                </tr> -->
+        <!-- </table> -->
+<?php
         
     }
     ?>
@@ -167,7 +177,7 @@ $time_start = microtime(true);
 
  if ($content == "url1") {
    $xml = simplexml_load_file("$taxon_finder_web_service_url/match?url1=$url1&url2=$url2");
-   // echo "URA</b><br /><p />".$xml;
+   echo "URA, $content == \"url1\" </b><br /><p />".$xml;
    if ($upload_file)
    {
      //dump the uploaded file now that we've used it.
@@ -181,14 +191,15 @@ $time_start = microtime(true);
  elseif ($content == "text") 
  {
    $xml = simplexml_load_file("$taxon_finder_web_service_url/match?url1=$url1&url2=$url2");
+   echo "URA, $content == \"text\" </b><br /><p />".$xml;
  }
  
 //parse the xml response and move it to an array
   $possible_names = array();
-  foreach ($xml->names->name as $name) 
-	{
-		echo "URA</b><br /><p />".$name;
-	}	
+	//   foreach ($xml as $name) 
+	// {
+	// 	echo "URA</b><br /><p />".$name;
+	// }	
   // {
   //   $namespaces = $name->getNameSpaces(true);
   //   $dwc = $name->children($namespaces['dwc']);
