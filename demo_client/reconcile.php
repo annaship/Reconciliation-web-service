@@ -105,48 +105,49 @@ if($upload1['name'] && $upload2['name']) {
                 <form action='reconcile.php' METHOD='POST' ENCTYPE='multipart/form-data'>
                 <!-- <tr> -->
                         <!-- <td> -->
-                                        <table width="468" height='350' border="0" cellspacing="2" cellpadding="0">
+                                        <table width=70% hight=50% border="0" cellspacing="2" cellpadding="0">
 																<th>
 																	<td>List to compare</td><td></td><td>Master list</td>
 																</th>
                                 <tr>
-                                    <td width=120>Upload File 1:</td>
-                                    <td><INPUT TYPE=file NAME=upload1 SIZE=50 ACCEPT=text></td>
-                                    <td width=120>Upload File 2:</td>
-                                    <td><INPUT TYPE=file NAME=upload2 SIZE=50 ACCEPT=text></td></tr>
-                                <tr>
-                                    <td>Enter URL 1:</td>
-                                    <td><input type=text size=81 name=url1></td>
-                                    <td>Enter URL 2:</td>
-                                    <td><input type=text size=81 name=url2></td></tr>
-                                <!-- <tr>
-                                    <td>Example URLs:</td>
+																		<td></td><td></td>
+                                    <td>Master list URLs:</td>
                                     <td>
-                                        <select name=url_e size='1'>";
+                                        <select name=url2 size='1'>";
                         <?php           
-                                                // $file = file("../test-data/testpages.txt");
-                                                // $num = count($file);
-                                                // echo "<option value='none'>- - Choose an example URL - -</option>\n";
-                                                // for($i=0 ; $i<$num ; $i++)
-                                                // {
-                                                //     $example=trim($file[$i]);
-                                                //     if (strlen($example)>4){
-                                                //     $option = explode("\t", $example, 2);
-                                                //     if (count($option)>1){
-                                                //                 echo "<option value='".trim($option[0])."'>".substr($option[1],0,88)."</option>\n";
-                                                //     }else{
-                                                //                 echo "<option value='".trim($option[0])."'>".substr($option[0],0,88)."</option>\n";
-                                                //     }
-                                                //     }
-                                                // }
+                                                $file = file("../webservices/texts/master_lists.txt");
+                                                $num = count($file);
+                                                echo "<option value='none'>- - Choose an Master list URL - -</option>\n";
+                                                for($i=0 ; $i<$num ; $i++)
+                                                {
+                                                    $example=trim($file[$i]);
+                                                    if (strlen($example)>4){
+                                                    $option = explode("\t", $example, 2);
+                                                    if (count($option)>1){
+                                                                echo "<option value='".trim($option[0])."'>".substr($option[1],0,88)."</option>\n";
+                                                    }else{
+                                                                echo "<option value='".trim($option[0])."'>".substr($option[0],0,88)."</option>\n";
+                                                    }
+                                                    }
+                                                }
                         ?>              
                                 </select>
-                                </td></tr> -->
+                                </td></tr>
+                                <tr>
+                                    <td width=120>Upload File 1:</td>
+                                    <td><INPUT TYPE=file NAME=upload1 SIZE=48 ACCEPT=text></td>
+                                    <td width=120>Upload File 2:</td>
+                                    <td><INPUT TYPE=file NAME=upload2 SIZE=48 ACCEPT=text></td></tr>
+                                <tr>
+                                    <td>Enter URL 1:</td>
+                                    <td><input type=text size=58 name=url1></td>
+                                    <td>Enter URL 2:</td>
+                                    <td><input type=text size=58 name=url2></td></tr>
                                 <tr>
                                     <td>Enter Free Text:</td>
-                                    <td><textarea rows='3' cols='70' name='freetext1'></textarea></td>
+                                    <td><textarea rows='3' cols='51' name='freetext1'></textarea></td>
                                     <td>Enter Free Text:</td>
-                                    <td><textarea rows='3' cols='70' name='freetext2'></textarea></td>
+                                    <td><textarea rows='3' cols='51' name='freetext2'></textarea></td>
                                 </tr>
                                 <tr>
 																		<td></td><td></td>
@@ -174,8 +175,8 @@ if ($content)
 $time_start = microtime(true);
 
  if ($content == "url") {
-   $xml = simplexml_load_file("$taxon_finder_web_service_url/match?url1=$url1&url2=$url2");
-   echo "URA, $content == \"url\" </b><br /><p />".$xml;
+   $result = file_get_contents("$taxon_finder_web_service_url/match?url1=$url1&url2=$url2");
+   echo "URA, $content == \"url\" </b><br /><p />".$result;
    if ($upload_file)
    {
      //dump the uploaded file now that we've used it.
@@ -190,13 +191,13 @@ $time_start = microtime(true);
   }
  elseif ($content == "text") 
  {
-   $xml = simplexml_load_file("$taxon_finder_web_service_url/match?text1=$freetext1&text2=$freetext2");
-   // echo "URA, $content == \"text\" </b><br /><p />".$xml;
+   $result = file_get_contents("$taxon_finder_web_service_url/match?text1=$freetext1&text2=$freetext2");
+   echo "URA, $content == \"text\" </b><br /><p />".$result;
  }
  
 //parse the xml response and move it to an array
   $possible_names = array();
-	//   foreach ($xml as $name) 
+	//   foreach ($result as $name) 
 	// {
 	// 	echo "URA</b><br /><p />".$name;
 	// }	
@@ -212,8 +213,7 @@ $time_start = microtime(true);
 //tell the client how long the process took and how many names were found
 
     $time = $time_end - $time_start;
-    echo "<b>Strings: ".count(@$possible_names)."</b><br />
-          <b>Time:&nbsp;".round($time, 2)." sec</b><br /><br /><br />";
+    echo "<b>Time:&nbsp;".round($time, 2)." sec</b><br /><br /><br />";
 
 ?>
       <table class='nice' width=900 border = 1>
@@ -223,7 +223,7 @@ $time_start = microtime(true);
         </tr>   
 <?php       
 //print each verbatim name and scientific name string in the table
-      foreach( $possible_names as $vern_name => $sci_name){
+      foreach($possible_names as $vern_name => $sci_name){
       	echo "<tr><td>$vern_name</td><td>---></td><td>$sci_name</td></tr>";
       }       
     }
@@ -243,3 +243,4 @@ $time_start = microtime(true);
 		</div>
 	</body>
 </html>
+
