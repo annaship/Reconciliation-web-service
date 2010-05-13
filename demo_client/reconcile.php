@@ -2,25 +2,25 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
  <head>
      <title>ECAT Development Site</title>
-     <link rel="stylesheet" type="text/css" href="http://ecat-dev.gbif.org/media/main.css" />
-     <script type="text/javascript" src="http://ecat-dev.gbif.org/js/jquery-1.4.min.js"></script>
+     <link rel="stylesheet" type="text/css" href="stylesheets/main.css" />
      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
  </head>
 <body>
 <div id="wrapper">
 <div id="header">
 	<p>
-		<a href="http://ecat-dev.gbif.org"><img src="http://ecat-dev.gbif.org/media/logo.jpg"></a>
+		<!-- <a href="http://ecat-dev.gbif.org"><img src="http://ecat-dev.gbif.org/media/logo.jpg"></a> -->
 	</p>
 		<div id="menu">
 			<ul>
-				<li><a href="http://ecat-dev.gbif.org/browser.php">Browser</a></li>
+				<!-- <li><a href="http://ecat-dev.gbif.org/browser.php">Browser</a></li> -->
 				<!-- <li><a href="http://ecat-dev.gbif.org/api/index.php">Webservices</a></li>
 				<li><a href="http://ecat-dev.gbif.org/parser.php">Name Parser</a></li>
 				<li><a href="http://ecat-dev.gbif.org/ubio/recognize.php">Name Finding</a></li>
 				<li><a href="http://ecat-dev.gbif.org/taxontagger/index.html">Taxon Tagger</a></li> -->
 			</ul>
 		</div>
+		<h1>Scientific Names Reconciliation Tool</h1>                                                                     
 </div>
 <div id="content">
   <br>
@@ -106,9 +106,9 @@ if($upload1['name'] && $upload2['name']) {
                 <!-- <tr> -->
                         <!-- <td> -->
                                         <table width=70% hight=50% border="0" cellspacing="2" cellpadding="0">
-																<th>
-																	<td>List to compare</td><td></td><td>Master list</td>
-																</th>
+																<tr>
+																	<th></th><th>List to compare</th><th></th><th>Master list</th>
+																</tr>
                                 <tr>
 																		<td></td><td></td>
                                     <td>Master list URLs:</td>
@@ -206,18 +206,22 @@ $time_start = microtime(true);
     echo "<b>Time:&nbsp;".round($time, 2)." sec</b><br /><br /><br />";
 
 ?>
-      <table class='nice' width=30% border = 0>
+		<table class='nice'>
+  <!-- <table class='nice' width=30% border = 0> -->
         <tr>
-          <th>Names to compare</th><th></th>
-          <th>Scientific names</th>
+          <th>Name to compare</th><th></th>
+          <th>Matched name</th>
         </tr>   
 <?php       
 	
 //print each verbatim name and scientific name string in the table
     //   foreach($possible_names as $vern_name => $sci_name){
 			foreach($possible_names as $names){
-				list($bad_name, $good_name) = explode("--->", $names); 
-      	echo "<tr><td>$bad_name</td><td>---></td><td>$good_name</td></tr>";
+				list($bad_name, $good_name) = explode(" ---> ", $names); 
+				if ($bad_name && $good_name)
+				{
+	      	echo "<tr><td>$bad_name</td><td>---></td><td>$good_name</td></tr>";			
+				}
       	// echo "<tr><td colspan = 3, align = left>$name</td></tr>";
       }       
     }
@@ -228,11 +232,11 @@ $time_start = microtime(true);
   <br/>
 </div>
 			<div id="footer">
-                    <ul class="sepmenu">
+                    <!-- <ul class="sepmenu">
                       <li><a href="http://code.google.com/p/gbif-ecat/">ECAT @ GoogleCode</a></li>
                       <li>&copy; 2009 <a href="http://www.gbif.org">GBIF</a></li>
                       <li>AppRoot: http://ecat-dev.gbif.org</li>
-                    </ul>        
+                    </ul>         -->
 			</div>
 		</div>
 	</body>
