@@ -56,8 +56,8 @@ if ($_POST["freetext1"] && $_POST["freetext2"]) {
   $freetext1 = $_POST["freetext1"];
   $freetext2 = $_POST["freetext2"];
 	// echo "</b><br /><p />4 = ".$content;
-	echo "</b><br /><p />freetext1 = ".$freetext1;
-	echo "</b><br /><p />freetext2 = ".$freetext2;
+	// echo "</b><br /><p />freetext1 = ".$freetext1;
+	// echo "</b><br /><p />freetext2 = ".$freetext2;
 }
 
 //deal with the uploaded file ** make sure the tmp directory has the correct permissions for this script to write to **
@@ -90,9 +90,9 @@ if($upload1['name'] && $upload2['name']) {
   $url2 = $current_dir."tmp/".$upload2['name'];
   unset($upload2);
   $content = "url";
-  echo "URA here<br /><p />".$content;
-  echo "URA here, url1 = <br /><p />".$url1;
-  echo "URA here, url2 = <br /><p />".$url2;
+  // echo "URA here<br /><p />".$content;
+  // echo "URA here, url1 = <br /><p />".$url1;
+  // echo "URA here, url2 = <br /><p />".$url2;
 
 }
 
@@ -176,7 +176,7 @@ $time_start = microtime(true);
 
  if ($content == "url") {
    $result = file_get_contents("$taxon_finder_web_service_url/match?url1=$url1&url2=$url2");
-   echo "URA, $content == \"url\" </b><br /><p />".$result;
+   // echo "URA, $content == \"url\" </b><br /><p />".$result;
    if ($upload_file)
    {
      //dump the uploaded file now that we've used it.
@@ -192,22 +192,12 @@ $time_start = microtime(true);
  elseif ($content == "text") 
  {
    $result = file_get_contents("$taxon_finder_web_service_url/match?text1=$freetext1&text2=$freetext2");
-   echo "URA, $content == \"text\" </b><br /><p />".$result;
+   // echo "URA, $content == \"text\" </b><br /><p />".$result;
  }
  
 //parse the xml response and move it to an array
   $possible_names = array();
-	//   foreach ($result as $name) 
-	// {
-	// 	echo "URA</b><br /><p />".$name;
-	// }	
-  // {
-  //   $namespaces = $name->getNameSpaces(true);
-  //   $dwc = $name->children($namespaces['dwc']);
-  //   $verbatim = (string)$name->verbatim;
-  //   $scientific = (string)$dwc->scientificName;
-  //   $possible_names[$verbatim] = $scientific;
-  // }
+	$possible_names = explode("\n", $result);
 
     $time_end = microtime(true);
 //tell the client how long the process took and how many names were found
@@ -216,15 +206,19 @@ $time_start = microtime(true);
     echo "<b>Time:&nbsp;".round($time, 2)." sec</b><br /><br /><br />";
 
 ?>
-      <table class='nice' width=900 border = 1>
+      <table class='nice' width=30% border = 0>
         <tr>
           <th>Names to compare</th><th></th>
           <th>Scientific names</th>
         </tr>   
 <?php       
+	
 //print each verbatim name and scientific name string in the table
-      foreach($possible_names as $vern_name => $sci_name){
-      	echo "<tr><td>$vern_name</td><td>---></td><td>$sci_name</td></tr>";
+    //   foreach($possible_names as $vern_name => $sci_name){
+			foreach($possible_names as $names){
+				list($bad_name, $good_name) = explode("--->", $names); 
+      	echo "<tr><td>$bad_name</td><td>---></td><td>$good_name</td></tr>";
+      	// echo "<tr><td colspan = 3, align = left>$name</td></tr>";
       }       
     }
 ?>
