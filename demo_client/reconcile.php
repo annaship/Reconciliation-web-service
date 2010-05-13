@@ -42,14 +42,6 @@ if ($_POST["url1"] && $_POST["url2"])
   $url2 = $_POST["url2"];
 }
 
-// //example URL
-// if (($_POST["url_e"]) && ($_POST["url_e"] != "none")) {
-//   $content = "url";
-//   $url = $_POST["url_e"];
-// 	echo "</b><br /><p />3 = ".$content;
-// 	echo "</b><br /><p />url = ".$url;
-// }
-
 //user specified freetext
 if ($_POST["freetext1"] && $_POST["freetext2"]) {
   $content = "text";
@@ -96,6 +88,36 @@ if($upload1['name'] && $upload2['name']) {
 
 }
 
+//example URL
+if ($_POST["url1"] && ($_POST["url_e"]) && ($_POST["url_e"] != "none")) {
+  $content = "url";
+  $url1 = $_POST["url1"];
+  $url2 = $_POST["url_e"];
+}
+if ($_POST["freetext1"] && ($_POST["url_e"]) && ($_POST["url_e"] != "none")) {
+  $content 	 = "text_url";
+  $freetext1 = $_POST["freetext1"];
+  $url2 		 = $_POST["url_e"];
+}
+if($upload1['name'] && ($_POST["url_e"]) && ($_POST["url_e"] != "none")) {
+  $upload_file = true;
+  echo "<p align='center'><b>Reading ".$upload1['name']."</b></p>";
+  flush();
+  $copylocation1 = "tmp/".$upload1['name'];
+  if(file_exists($copylocation1)) {
+    unlink($copylocation1);
+    }
+  copy ($upload1['tmp_name'], $copylocation1);
+
+// build the url to pass to the url function of the taxonfinder webservice
+  $current_dir = preg_replace('/\?.*$/', '', $_SERVER['REQUEST_URI']);
+  $current_dir = 'http://'.$_SERVER['HTTP_HOST'].'/'.ltrim(dirname($current_dir), '/').'/';
+  $url1 = $current_dir."tmp/".$upload1['name'];
+  $url2 = $_POST["url_e"];
+  unset($upload1);
+  $content = "url";
+}
+
 
 //If the user hasn't requested any content to be run against taxonfinder yet, we present the input form    
     if (!$content)
@@ -113,7 +135,7 @@ if($upload1['name'] && $upload2['name']) {
 																		<td></td><td></td>
                                     <td>Master list URLs:</td>
                                     <td>
-                                        <select name=url2 size='1'>";
+                                        <select name=url_e size='1'>";
                         <?php           
                                                 $file = file("../webservices/texts/master_lists.txt");
                                                 $num = count($file);
@@ -194,6 +216,12 @@ $time_start = microtime(true);
    $result = file_get_contents("$taxon_finder_web_service_url/match?text1=$freetext1&text2=$freetext2");
    // echo "URA, $content == \"text\" </b><br /><p />".$result;
  }
+ elseif ($content == "text_url") 
+ {
+   $result = file_get_contents("$taxon_finder_web_service_url/match?text1=$freetext1&url2=$url2");
+   // echo "URA, $content == \"text\" </b><br /><p />".$result;
+ }
+
  
 //parse the xml response and move it to an array
   $possible_names = array();

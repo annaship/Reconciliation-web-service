@@ -26,14 +26,19 @@ TEST_URL = 'http://www.bacterio.cict.fr/d/desulfotomaculum.html'
         @text2 = URI.escape "Atys sandersoni"
       end
       
-      it "should take url and return text from firts file" do
+      it "should take url and return text" do
         get "/match?url1=#{@bad_URL}&url2=#{@good_URL}"
-        last_response.body.should include("AHYS SANDERSONI")
+        last_response.body.should include("Ahys sandersoni ---> Atys sandersoni")
       end    
 
-      it "should take both texts and return data from firts one" do
+      it "should take both texts and return text" do
         get "/match?text1=#{@text1}&text2=#{@text2}"
-        last_response.body.should include("ATYS SAJIDERSONI")
+        last_response.body.should include("Atys sajidersoni ---> Atys sandersoni")
+      end    
+
+      it "should take text and example url and return text" do
+        get "/match?text1=#{@text1}&url2=#{@good_URL}"
+        last_response.body.should include("Atys sajidersoni ---> Abra affinis")
       end    
 
       # it "should return match" do

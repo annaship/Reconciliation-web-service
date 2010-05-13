@@ -21,6 +21,7 @@ class MyTCPHandler(SocketServer.StreamRequestHandler):
         total_data = []
         conn = self.request
         conn_name = conn.getpeername()
+
         def take_set(text):
 	            f2 = text.split("\n")
 	            f3 = set(f2)
