@@ -127,63 +127,64 @@ if($upload1['name'] && ($_POST["url_e"]) && ($_POST["url_e"] != "none")) {
     {
       ?>
         <!-- <table width="272" border="0" cellspacing="2" cellpadding=""> -->
-                <form action='reconcile.php' METHOD='POST' ENCTYPE='multipart/form-data'>
-                <!-- <tr> -->
-                        <!-- <td> -->
-                                        <table width=70% hight=50% border="0" cellspacing="2" cellpadding="0">
-																<tr>
-																	<th></th><th>List to compare</th><th></th><th>Master list</th>
-																</tr>
-                                <tr>
-																		<td></td><td></td>
-                                    <td>Master list URLs:</td>
-                                    <td>
-                                        <select name=url_e size='1'>";
-                        <?php           
-                                                $file = file("../webservices/texts/master_lists.txt");
-                                                $num = count($file);
-                                                echo "<option value='none'>- - Choose an Master list URL - -</option>\n";
-                                                for($i=0 ; $i<$num ; $i++)
-                                                {
-                                                    $example=trim($file[$i]);
-                                                    if (strlen($example)>4){
-                                                    $option = explode("\t", $example, 2);
-                                                    if (count($option)>1){
-                                                                echo "<option value='".trim($option[0])."'>".substr($option[1],0,88)."</option>\n";
-                                                    }else{
-                                                                echo "<option value='".trim($option[0])."'>".substr($option[0],0,88)."</option>\n";
-                                                    }
-                                                    }
-                                                }
-                        ?>              
-                                </select>
-                                </td></tr>
-                                <tr>
-                                    <td width=120>Upload File 1:</td>
-                                    <td><INPUT TYPE=file NAME=upload1 SIZE=48 ACCEPT=text></td>
-                                    <td width=120>Upload File 2:</td>
-                                    <td><INPUT TYPE=file NAME=upload2 SIZE=48 ACCEPT=text></td></tr>
-                                <tr>
-                                    <td>Enter URL 1:</td>
-                                    <td><input type=text size=58 name=url1></td>
-                                    <td>Enter URL 2:</td>
-                                    <td><input type=text size=58 name=url2></td></tr>
-                                <tr>
-                                    <td>Enter Free Text:</td>
-                                    <td><textarea rows='3' cols='51' name='freetext1'></textarea></td>
-                                    <td>Enter Free Text:</td>
-                                    <td><textarea rows='3' cols='51' name='freetext2'></textarea></td>
-                                </tr>
-                                <tr>
-																		<td></td><td></td>
-                                    <td><input type=submit value='Submit'></td>
-                                </tr>
-                        </table>
-                        <!-- </td>
-                        <td> -->
-                        <input type=hidden name=func value=submit>
-                        </form>
-                        <!-- </td>
+          <form action='reconcile.php' METHOD='POST' ENCTYPE='multipart/form-data'>
+          <!-- <tr> -->
+           <!-- <td> -->
+					<table width=70% hight=50% border="0" cellspacing="2" cellpadding="0">
+						<tr>
+						<th></th><th>List to compare</th><th></th><th>Master list</th>
+						</tr>
+						<tr>
+						<td></td><td></td>
+						<td>Master list URLs:</td>
+						<td>
+						<select name=url_e size='1'>";
+						<?php           
+						        $file = file("../webservices/texts/master_lists.txt");
+						        $num = count($file);
+						        echo "<option value='none'>- - Choose an Master list URL - -</option>\n";
+						        for($i=0 ; $i<$num ; $i++)
+						        {
+						            $example = trim($file[$i]);
+												$name_to_show = basename($example);
+						            if (strlen($example)>4){
+						            $option = explode("\t", $example, 2);
+						            if (count($option)>1){
+						                        echo "<option value='".trim($option[0])."'> ".substr($name_to_show, 0, 88)." </option>\n";
+						            }else{
+						                        echo "<option value='".trim($option[0])."'> ".substr($name_to_show, 0, 88)." </option>\n";
+						            }
+						            }
+						        }
+						?>              
+	          </select>
+	          </td></tr>
+            <tr>
+                <td width=120>Upload File 1:</td>
+                <td><INPUT TYPE=file NAME=upload1 SIZE=48 ACCEPT=text></td>
+                <td width=120>Upload File 2:</td>
+                <td><INPUT TYPE=file NAME=upload2 SIZE=48 ACCEPT=text></td></tr>
+            <tr>
+                <td>Enter URL 1:</td>
+                <td><input type=text size=58 name=url1></td>
+                <td>Enter URL 2:</td>
+                <td><input type=text size=58 name=url2></td></tr>
+            <tr>
+                <td>Enter Free Text:</td>
+                <td><textarea rows='3' cols='51' name='freetext1'></textarea></td>
+                <td>Enter Free Text:</td>
+                <td><textarea rows='3' cols='51' name='freetext2'></textarea></td>
+            </tr>
+            <tr>
+								<td></td><td></td>
+                <td><input type=submit value='Submit'></td>
+            </tr>
+    </table>
+    <!-- </td>
+    <td> -->
+    <input type=hidden name=func value=submit>
+    </form>
+    <!-- </td>
                 </tr> -->
         <!-- </table> -->
 <?php
