@@ -207,7 +207,8 @@ $time_start = microtime(true);
    {
      //dump the uploaded file now that we've used it.
      unlink($copylocation1);
-     unlink($copylocation2);
+		 if ($copylocation2)
+     {unlink($copylocation2);}
    }
    else
    {

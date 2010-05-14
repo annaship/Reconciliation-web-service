@@ -36,10 +36,10 @@ class ReconicliationClient
     #   names_arr << a_name
     # end
 
-    file_outp = File.open("/Users/anna/work/reconcile-app/webservices/texts/output_check.txt", 'w')
-    file_outp.print(@matches.inspect.to_s)
-    file_outp.close
-
+    # file_outp = File.open("/Users/anna/work/reconcile-app/webservices/texts/output_check.txt", 'w')
+    # file_outp.print(@matches.inspect.to_s)
+    # file_outp.close
+    # 
 
     # @matches = names_arr
     # 
