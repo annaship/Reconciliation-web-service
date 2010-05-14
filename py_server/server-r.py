@@ -42,7 +42,7 @@ class MyTCPHandler(SocketServer.StreamRequestHandler):
 	                    arr1.append(a + " ---> " + b)
 	                    # if (b == ""):
 	                    #     b = "nil"
-	                    print "arr1 =%s\n" % arr1
+	                    # print "arr1 =%s\n" % arr1
 											# sentence = ["there", "is", "no", "spoon"]
 											# '+'.join(sentence)
 	            res = "\n".join(arr1)

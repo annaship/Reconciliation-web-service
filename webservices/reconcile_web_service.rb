@@ -21,12 +21,19 @@ get '/' do
   "Taxon Name Finding API, documentation at http://code.google.com/p/taxon-name-processing"
 end
 
+def print_bytes(thestring)
+  thestring.each_byte do |c|
+      print "%s = %d\n" % [c.chr, c]
+  end
+end
+  
+
 get '/match' do
   # @@client = TaxonFinderClient.new 'localhost' 
   # @@client = NetiTaxonFinderClient.new 'localhost' 
   @@client = ReconicliationClient.new 'localhost' 
   puts "=" * 80
-  # print "params = %s" % params.inspect
+  print "params = %s" % params.inspect
   # params = {"url1"=>"http://localhost/text_good.txt", "url2"=>"http://localhost/text_bad.txt"}
 
   format = @@valid_formats.include?(params[:format]) ? params[:format] : "xml"
@@ -40,8 +47,14 @@ get '/match' do
   end
   
   # print "2) content1 = %s, content2 = %s\n" % [content1.inspect, content2.inspect]
-  
+  print "1: "
+  print_bytes(params[:text1])
+  print "2: "
+  print_bytes(content1)
   content1 = URI.unescape content1
+  print "3: "
+
+  print_bytes(content1)
   content2 = URI.unescape content2
   # print "3) content1 = %s, content2 = %s\n" % [content1.inspect, content2.inspect]
   # decode if it's encoded
@@ -81,6 +94,11 @@ get '/match' do
   
   # print "6) content1 = %s, content2 = %s\n" % [content1.inspect, content2.inspect]
   content = content1 + "&&&EOF&&&" + content2     
+  
+  # content1.each_byte do |c|
+  #     print "%s = %d\n" % [c.chr, c]
+  # end
+ 
   
   # names1 = @@client.match(content1)
   # names2 = @@client.match(content2)

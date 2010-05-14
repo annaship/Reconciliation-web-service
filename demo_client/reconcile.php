@@ -1,31 +1,48 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
  <head>
-     <title>ECAT Development Site</title>
+     <title>BoA Names Services Development Site</title>
      <link rel="stylesheet" type="text/css" href="stylesheets/main.css" />
      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
  </head>
 <body>
 <div id="wrapper">
 <div id="header">
-	<p>
-		<!-- <a href="http://ecat-dev.gbif.org"><img src="http://ecat-dev.gbif.org/media/logo.jpg"></a> -->
-	</p>
-		<div id="menu">
+	<!-- <p>
+		<a href="http://ecat-dev.gbif.org"><img src="http://ecat-dev.gbif.org/media/logo.jpg"></a>
+	</p> -->
+		<!-- <div id="menu">
 			<ul>
-				<!-- <li><a href="http://ecat-dev.gbif.org/browser.php">Browser</a></li> -->
-				<!-- <li><a href="http://ecat-dev.gbif.org/api/index.php">Webservices</a></li>
+				<li><a href="http://ecat-dev.gbif.org/browser.php">Browser</a></li>
+				<li><a href="http://ecat-dev.gbif.org/api/index.php">Webservices</a></li>
 				<li><a href="http://ecat-dev.gbif.org/parser.php">Name Parser</a></li>
 				<li><a href="http://ecat-dev.gbif.org/ubio/recognize.php">Name Finding</a></li>
-				<li><a href="http://ecat-dev.gbif.org/taxontagger/index.html">Taxon Tagger</a></li> -->
+				<li><a href="http://ecat-dev.gbif.org/taxontagger/index.html">Taxon Tagger</a></li>
 			</ul>
+		</div> -->
+		<h2>Scientific Names Reconciliation Tool</h2>                                                                     
+		<div align='left'>
+			<form action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
+			<input type="submit" name="submit" value="Refresh This Page" />
+			</form>
 		</div>
-		<h1>Scientific Names Reconciliation Tool</h1>                                                                     
+
 </div>
 <div id="content">
   <br>
   <div align='center'>
     <?php
+	function print_chr($string){
+		
+		$j = mb_strlen($string);
+		for ($k = 0; $k < $j; $k++) {
+		$char = mb_substr($string, $k, 1);
+		echo "<p/> ".$char." = ".ord($char);
+		}
+	  // return ($n * $n);
+	}
+
+
 //this should be in a config file in a production implementation of this reference client
 /////////////////////////////////////////////////////////
 $taxon_finder_web_service_url = "http://localhost:4567"; 
@@ -49,8 +66,10 @@ if ($_POST["freetext1"] && $_POST["freetext2"]) {
   $freetext2 = $_POST["freetext2"];
 	// echo "</b><br /><p />4 = ".$content;
 	// echo "</b><br /><p />freetext1 = ".$freetext1;
+	// print_chr($freetext1);
 	// echo "</b><br /><p />freetext2 = ".$freetext2;
 }
+
 
 //deal with the uploaded file ** make sure the tmp directory has the correct permissions for this script to write to **
 // print_r(@$_FILES["upload2"]);
@@ -82,10 +101,6 @@ if($upload1['name'] && $upload2['name']) {
   $url2 = $current_dir."tmp/".$upload2['name'];
   unset($upload2);
   $content = "url";
-  // echo "URA here<br /><p />".$content;
-  // echo "URA here, url1 = <br /><p />".$url1;
-  // echo "URA here, url2 = <br /><p />".$url2;
-
 }
 
 //example URL
@@ -213,7 +228,11 @@ $time_start = microtime(true);
   }
  elseif ($content == "text") 
  {
-   $result = file_get_contents("$taxon_finder_web_service_url/match?text1=$freetext1&text2=$freetext2");
+	print_chr($freetext1);
+	$uncode_text1 = urlencode($freetext1);
+	echo "<br/>==============<br/>";
+	print_chr($uncode_text1);
+   $result = file_get_contents("$taxon_finder_web_service_url/match?text1=$uncode_text1&text2=$freetext2");
    // echo "URA, $content == \"text\" </b><br /><p />".$result;
  }
  elseif ($content == "text_url") 
@@ -270,3 +289,9 @@ $time_start = microtime(true);
 	</body>
 </html>
 
+<!-- $chars = str_split( $freetext1, 1 );
+foreach ( $chars as $char )
+{
+	$num = ord($char);
+  echo "{$num}<br />\n";
+} -->

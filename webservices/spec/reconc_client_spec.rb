@@ -24,6 +24,7 @@ TEST_URL = 'http://www.bacterio.cict.fr/d/desulfotomaculum.html'
         # /Users/anna/work/reconcile-app/webservices/public/ 
         @text1 = URI.escape "Atys sajidersoni\nAhys sandersoni"
         @text2 = URI.escape "Atys sandersoni"
+        @text3 = URI.escape "Atys sajidersoni\rAhys sandersoni"
       end
       
       it "should take url and return text" do
@@ -39,6 +40,11 @@ TEST_URL = 'http://www.bacterio.cict.fr/d/desulfotomaculum.html'
       it "should take text and example url and return text" do
         get "/match?text1=#{@text1}&url2=#{@good_URL}"
         last_response.body.should include("Atys sajidersoni ---> Abra affinis")
+      end    
+
+      it "should take text with \r and return text" do
+        get "/match?text1=#{@text3}&url2=#{@text1}"
+        last_response.body.should include("Atys sajidersoni ---> Ahys sandersoni")
       end    
 
       # it "should return match" do

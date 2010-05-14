@@ -27,7 +27,8 @@ class ReconicliationClient
 
     # current_pos = 1
     # names_arr   = []
-    @matches = output.gsub("\t","\n") #if output
+    @matches = output
+    # .gsub("\t","\n") #if output
     # @matches.each do |name|
     #   name = name.strip
     #   current_pos += name.size
