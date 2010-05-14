@@ -32,17 +32,6 @@
   <br>
   <div align='center'>
     <?php
-	function print_chr($string){
-		
-		$j = mb_strlen($string);
-		for ($k = 0; $k < $j; $k++) {
-		$char = mb_substr($string, $k, 1);
-		echo "<p/> ".$char." = ".ord($char);
-		}
-	  // return ($n * $n);
-	}
-
-
 //this should be in a config file in a production implementation of this reference client
 /////////////////////////////////////////////////////////
 $taxon_finder_web_service_url = "http://localhost:4567"; 
@@ -62,11 +51,10 @@ if ($_POST["url1"] && $_POST["url2"])
 //user specified freetext
 if ($_POST["freetext1"] && $_POST["freetext2"]) {
   $content = "text";
-  $freetext1 = $_POST["freetext1"];
-  $freetext2 = $_POST["freetext2"];
+  $freetext1 = urlencode($_POST["freetext1"]);
+  $freetext2 = urlencode($_POST["freetext2"]);
 	// echo "</b><br /><p />4 = ".$content;
 	// echo "</b><br /><p />freetext1 = ".$freetext1;
-	// print_chr($freetext1);
 	// echo "</b><br /><p />freetext2 = ".$freetext2;
 }
 
@@ -111,7 +99,7 @@ if ($_POST["url1"] && ($_POST["url_e"]) && ($_POST["url_e"] != "none")) {
 }
 if ($_POST["freetext1"] && ($_POST["url_e"]) && ($_POST["url_e"] != "none")) {
   $content 	 = "text_url";
-  $freetext1 = $_POST["freetext1"];
+  $freetext1 = urlencode($_POST["freetext1"]);
   $url2 		 = $_POST["url_e"];
 }
 if($upload1['name'] && ($_POST["url_e"]) && ($_POST["url_e"] != "none")) {
@@ -228,11 +216,7 @@ $time_start = microtime(true);
   }
  elseif ($content == "text") 
  {
-	print_chr($freetext1);
-	$uncode_text1 = urlencode($freetext1);
-	echo "<br/>==============<br/>";
-	print_chr($uncode_text1);
-   $result = file_get_contents("$taxon_finder_web_service_url/match?text1=$uncode_text1&text2=$freetext2");
+   $result = file_get_contents("$taxon_finder_web_service_url/match?text1=$freetext1&text2=$freetext2");
    // echo "URA, $content == \"text\" </b><br /><p />".$result;
  }
  elseif ($content == "text_url") 
