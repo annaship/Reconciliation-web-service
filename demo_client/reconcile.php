@@ -149,11 +149,11 @@ if($upload1['name'] && ($_POST["url_e"]) && ($_POST["url_e"] != "none")) {
 												$name_to_show = basename($example);
 						            if (strlen($example)>4){
 						            $option = explode("\t", $example, 2);
-						            if (count($option)>1){
-						                        echo "<option value='".trim($option[0])."'> ".substr($name_to_show, 0, 88)." </option>\n";
-						            }else{
-						                        echo "<option value='".trim($option[0])."'> ".substr($name_to_show, 0, 88)." </option>\n";
-						            }
+						            // if (count($option)>1){
+						                        echo " <option class='pretty' value='".trim($option[0])."'> ".substr($name_to_show, 0, 88)." </option>\n";
+						            // }else{
+						                        // echo "<option value='".trim($option[0])."'> ".substr($name_to_show, 0, 88)." </option>\n";
+						            // }
 						            }
 						        }
 						?>              

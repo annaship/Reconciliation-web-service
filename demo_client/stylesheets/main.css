@@ -40,6 +40,7 @@ input[type="submit"] {
 	background:#46a912; 
 	color:#FFF;
 }
+option.pretty {padding-left: 0.1em;}
 
 /* @group TABLES */
 table.nice{
