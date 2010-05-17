@@ -30,15 +30,15 @@ get '/match' do
   begin
     content1 = ""
     content2 = ""
-    params.each do |key, value|
+    params.each do |key, value| 
       if key.end_with? "1"
-        print "\nkey = %s\n" % key 
+        # print "\nkey = %s\n" % key 
         content1 = value
       elsif key.end_with? "2"
-        print "\nkey = %s\n" % key
+        # print "\nkey = %s\n" % key
         content2 = value
       end
-      print "content1 = %s, content2 = %s\n" % [content1, content2]
+      # print "content1 = %s, content2 = %s\n" % [content1, content2]
     end
 
     # content1 = params[:text1] || params[:url1] || params[:encodedtext1] || params[:encodedurl1]
@@ -47,14 +47,16 @@ get '/match' do
     status 400
   end
 
-  print "UUU content1 = %s, content2 = %s\n" % [content1, content2]
+  # print "UUU content1 = %s, content2 = %s\n" % [content1, content2]
 
+  content1 = take_content(content1)
+  content2 = take_content(content2)
   
-  content1 = URI.unescape content1
-  content2 = URI.unescape content2
-  # decode if it's encoded
-  content1 = Base64::decode64 content1 if params[:encodedtext1] || params[:encodedurl1]
-  content2 = Base64::decode64 content2 if params[:encodedtext2] || params[:encodedurl2]
+  # content1 = URI.unescape content1
+  # content2 = URI.unescape content2
+  # # decode if it's encoded
+  # content1 = Base64::decode64 content1 if params[:encodedtext1] || params[:encodedurl1]
+  # content2 = Base64::decode64 content2 if params[:encodedtext2] || params[:encodedurl2]
   
   # scrape if it's a url
   content1 = read_content(content1) if params[:encodedurl1] || params[:url1]
@@ -88,5 +90,20 @@ def read_content(content)
   # use nokogiri only for HTML, because otherwise it stops on OCR errors
   # content = Nokogiri::HTML(response).content if pure_text.include?("<html>")    
   content = Nokogiri::HTML(response).content if (pure_text && pure_text.include?("<html>"))    
+  return content
+end
+
+def take_content(content)
+  content = URI.unescape content
+  # # decode if it's encoded
+  params.each_key do |key|
+    content = Base64::decode64 content if key.start_with? "encode"
+  end
+  # # scrape if it's a url
+  # params.each_key do |key|
+  #   if key.start_with? "encodedurl" || "url"
+  #     content = read_content(content)
+  #   end
+  # end
   return content
 end

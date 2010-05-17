@@ -1,0 +1,57 @@
+<form method="post" action="/submit">
+<!-- <form action='reconcile.php' METHOD='POST' ENCTYPE='multipart/form-data'> -->
+	<table class='simple'>
+		<tr>
+			<th></th><th>List to compare</th><th></th><th>Master list</th>
+		</tr>
+		<tr>
+			<td></td><td></td>
+			<td class="label">Master list URLs:</td>
+			<td>
+			<!-- <select name=url_e size='1'>";
+			<?php           
+			    $file = file("../webservices/texts/master_lists.txt");
+			    $num = count($file);
+			    echo "<option value='none'>- - Choose an Master list URL - -</option>\n";
+			    for($i=0 ; $i<$num ; $i++)
+			    {
+			        $example = trim($file[$i]);
+					$name_to_show = basename($example);
+			        if (strlen($example)>4){
+			        $option = explode("\t", $example, 2);
+			        // if (count($option)>1){
+			                    echo " <option class='pretty' value='".trim($option[0])."'> ".substr($name_to_show, 0, 88)." </option>\n";
+			        // }else{
+			                    // echo "<option value='".trim($option[0])."'> ".substr($name_to_show, 0, 88)." </option>\n";
+			        // }
+			        }
+			    }
+			?>              
+			</select> -->
+			</td>
+		</tr>
+		<tr>
+	    <td class="label">Upload File 1:</td>
+	    <td><INPUT TYPE=file NAME=upload1 SIZE=48 ACCEPT=text></td>
+	    <td class="label">Upload File 2:</td>
+	    <td><INPUT TYPE=file NAME=upload2 SIZE=48 ACCEPT=text></td></tr>
+		<tr>
+	    <td class="label">Enter URL 1:</td>
+	    <td><input type=text size=58 name=url1></td>
+	    <td class="label">Enter URL 2:</td>
+	    <td><input type=text size=58 name=url2></td></tr>
+		<tr>
+	    <td class="label">Enter Free Text:</td>
+	    <td><textarea rows='3' cols='51' name='freetext1'></textarea></td>
+	    <td class="label">Enter Free Text:</td>
+	    <td><textarea rows='3' cols='51' name='freetext2'></textarea></td>
+		</tr>
+		<!-- <tr>
+			<td></td><td></td>
+	    <td></td>
+		</tr> -->
+	</table>
+	<br/>
+	<input type=submit value='Submit'>
+	<input type=hidden name=func value=submit>
+</form>
