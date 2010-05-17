@@ -9,24 +9,24 @@
 			<td class="label">Master list URLs:</td>
 			<td>
 			<!-- <select name=url_e size='1'>";
-			<?php           
-			    $file = file("../webservices/texts/master_lists.txt");
-			    $num = count($file);
-			    echo "<option value='none'>- - Choose an Master list URL - -</option>\n";
-			    for($i=0 ; $i<$num ; $i++)
-			    {
-			        $example = trim($file[$i]);
-					$name_to_show = basename($example);
-			        if (strlen($example)>4){
-			        $option = explode("\t", $example, 2);
+//			<?php           
+					// 			    $file = file("../webservices/texts/master_lists.txt");
+					// 			    $num = count($file);
+					// 			    echo "<option value='none'>- - Choose an Master list URL - -</option>\n";
+					// 			    for($i=0 ; $i<$num ; $i++)
+					// 			    {
+					// 			        $example = trim($file[$i]);
+					// $name_to_show = basename($example);
+					// 			        if (strlen($example)>4){
+					// 			        $option = explode("\t", $example, 2);
 			        // if (count($option)>1){
-			                    echo " <option class='pretty' value='".trim($option[0])."'> ".substr($name_to_show, 0, 88)." </option>\n";
+			                    // echo " <option class='pretty' value='".trim($option[0])."'> ".substr($name_to_show, 0, 88)." </option>\n";
 			        // }else{
 			                    // echo "<option value='".trim($option[0])."'> ".substr($name_to_show, 0, 88)." </option>\n";
 			        // }
-			        }
-			    }
-			?>              
+			    //     }
+			    // }
+			// ?>              
 			</select> -->
 			</td>
 		</tr>

@@ -3,4 +3,9 @@
 	  <th>Name to compare</th><th></th>
 	  <th>Matched name</th>
 	</tr>   
+	
+	<%#= possible_names %>
 </table>
+<% @possible_names.each do |name| %>
+	<%= name %>
+<% end %>
