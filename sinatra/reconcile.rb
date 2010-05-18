@@ -44,62 +44,34 @@ post '/submit' do
   # unless (params['upload1'].empty?)
     # save(params['upload1'])
   # end
-  unless (params['upload1'].empty?)
-    time_tmp = Time.now.to_f.to_s   
-    filename = File.join("tmp/", time_tmp+params[:upload1][:filename])
-    f = File.open(filename, 'wb') 
-      f.write(params['upload1'][:tempfile].read)
-    # end
-    f.close
-    @url1 = "http://localhost/sinatra/"+filename
-    puts @url1
+  unless (params['upload1'].nil?)
+    upload = params['upload1']
+    @url1 = upload_file(upload)
   end
-  unless (params['upload2'].empty?)
-    time_tmp = Time.now.to_f.to_s   
-    filename = File.join("tmp/", time_tmp+params[:upload2][:filename])
-    f = File.open(filename, 'wb') 
-      f.write(params['upload2'][:tempfile].read)
-    # end
-    f.close
-    @url2 = "http://localhost/sinatra/"+filename
-    puts @url2
+  unless (params['upload2'].nil?)
+    upload = params['upload2']
+    @url2 = upload_file(upload)
   end
-  # unless (params['upload2'].empty?)
-  #   time_tmp = Time.now.to_f.to_s   
-  #   filename = File.join("tmp/", time_tmp+params[:upload2][:filename])
-  #   f = File.open(filename, 'wb') do |file|
-  #     file.write(params['upload1'][:tempfile].read)
-  #   end
-  #   f.close
-  #   @url2 = filename
+  # unless (params['url_e'].empty?)
+  #   @url2 = "http://localhost/sinatra/master_lists"+params['url_e']
   # end
-  # params.each do |key, value|
-  #   unless (value.nil?) #value.empty? || 
-  #     instance_variable_set("@#{key}", value)
-  #   end
-  #   unless (params['upload1'].empty?)
-  #     key = "url1"
-  #     value = params['upload1'][:tempfile].path
-  #     instance_variable_set("@#{key}", value)
-  #   end
-  #   unless (params['upload2'].empty?)
-  #     key = "url2"
-  #     value = params['upload2'][:tempfile].path
-  #     instance_variable_set("@#{key}", value)
-  #   end
-  #   print "@url1 = %s, value = %s\t@url2 = %s\n" % [@url1, value, @url2]
-  # end
-  # if (params["url1"] && params["url2"])
-  #   content = "url";
-  #   url1 = params["url1"]
-  #   url2 = params["url2"]
-  # end
+  
+  params.each do |key, value|
+    unless key.start_with?('upload')
+      unless value.empty?
+        print "key = %s, value = %s\n" % [key, value]
+        unless (key == "url_e" && value == "none")
+          @url2 = "http://localhost/sinatra/master_lists/"+params['url_e'] 
+        end
+        instance_variable_set("@#{key}", value)
+      end
+    end
+    # print "@url1 = %s,\t@url2 = %s\n" % [@url1, @url2]
+  end
+
   if (@url1 && @url2)
     result = RestClient.get "http://localhost:4567/match?url1=#{@url1}&url2=#{@url2}"
   end
-  # if (@upload1 && @upload2)
-  #   result = RestClient.get "http://localhost:4567/match?url1=#{@upload1}&url2=#{@upload2}"
-  # end
 
 
   possible_names = result.split("\n");
@@ -125,12 +97,13 @@ def build_master_lists
   return mfile_names
 end
 
-def get_file(picture_field)
-  # {"url1"=>"", "url2"=>"", "url_e"=>"none", "freetext1"=>"", "freetext2"=>"", "upload1"=>{:type=>"text/plain", :tempfile=>#<File:/var/folders/wq/wqTzo7SOHx4V9VsmKFOn5k+++TM/-Tmp-/RackMultipart20100518-8810-1l0kb7l-0>, :head=>"Content-Disposition: form-data; name=\"upload1\"; filename=\"text_bad.txt\"\r\nContent-Type: text/plain\r\n", :name=>"upload1", :filename=>"text_bad.txt"}, "upload2"=>{:type=>"text/plain", :tempfile=>#<File:/var/folders/wq/wqTzo7SOHx4V9VsmKFOn5k+++TM/-Tmp-/RackMultipart20100518-8810-92cm9n-0>, :head=>"Content-Disposition: form-data; name=\"upload2\"; filename=\"text_good.txt\"\r\nContent-Type: text/plain\r\n", :name=>"upload2", :filename=>"text_good.txt"}}
-  
-  @name = picture_field.respond_to?(:original_filename) ? base_part_of(picture_field.original_filename) : nil
-  @content_type = picture_field.respond_to?(:content_type) ? picture_field.content_type.chomp : nil
-  @data = picture_field.respond_to?(:read) ? picture_field.read : picture_field.to_s
+def upload_file(upload)
+    time_tmp = Time.now.to_f.to_s   
+    filename = File.join("tmp/", time_tmp+upload[:filename])
+    f = File.open(filename, 'wb') 
+    f.write(upload[:tempfile].read)
+    f.close
+    url = "http://localhost/sinatra/"+filename
 end
 
 # # My 'helpers'

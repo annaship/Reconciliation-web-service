@@ -4,7 +4,7 @@
 	  <th>Matched name</th>
 	</tr>   
 	<% @arr.each do |name| 
-		if (name.keys[0] && name.values[0])%>
+		if (name.keys[0] && name.values[0] && !name.keys[0].empty? && !name.keys[0].empty?)	%>
 		<tr>
 			<td><%= name.keys[0] %></td> <td>---></td> <td><%= name.values[0]%></td>
 		</tr>
