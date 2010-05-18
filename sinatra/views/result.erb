@@ -3,9 +3,11 @@
 	  <th>Name to compare</th><th></th>
 	  <th>Matched name</th>
 	</tr>   
-	
-	<%#= possible_names %>
+	<% @arr.each do |name| 
+		if (name.keys[0] && name.values[0])%>
+		<tr>
+			<td><%= name.keys[0] %></td> <td>---></td> <td><%= name.values[0]%></td>
+		</tr>
+		<% end %>
+	<% end %>
 </table>
-<% @possible_names.each do |name| %>
-	<%= name %>
-<% end %>

@@ -74,7 +74,8 @@ get '/match' do
   # content_type 'text/xml', :charset => 'utf-8'
   # to_xml(names)
   content_type 'text/HTML', :charset => 'utf-8'
-  "<html><head></head><body>"+names+"</body></html>"
+  # "<html><head></head><body>"+names+"</body></html>"
+  names
 end
 
 private

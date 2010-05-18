@@ -20,16 +20,18 @@ post '/submit' do
   if (params["url1"] && params["url2"])
     content = "url";
     url1 = params["url1"]
-    # puts url1
     url2 = params["url2"]
-    # puts url2
   end
   result = RestClient.get "http://localhost:4567/match?url1=#{url1}&url2=#{url2}"
-  # result = "http://localhost:4567/match?url1=#{url1}&url2=#{url2}"
-  # puts result.inspect.to_s
-  @possible_names = result.split("\n");
-  # puts possible_names.class
-	
+  possible_names = result.split("\n");
+	@arr = []
+	possible_names.each do |names|
+	  name_bad, name_good = names.split(" ---> ")
+    # print "name_bad = %s\n" % name_bad
+    # print "name_good = %s\n" % name_good
+    @arr << {name_bad, name_good} 
+  end
+  # print "@arr = %s\n" % @arr.inspect.to_s
   # {"url1"=>"http://localhost/text_bad.txt", "url2"=>"http://localhost/text_good.txt", "freetext1"=>"", "freetext2"=>"", "upload1"=>"", "upload2"=>"", "func"=>"submit"}
   # erb(:result, :locals => possible_names)
   erb :result
