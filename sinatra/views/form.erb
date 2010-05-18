@@ -1,5 +1,4 @@
 <form method="post" action="/submit">
-<!-- <form action='reconcile.php' METHOD='POST' ENCTYPE='multipart/form-data'> -->
 	<table class='simple'>
 		<tr>
 			<th></th><th>List to compare</th><th></th><th>Master list</th>
@@ -8,26 +7,12 @@
 			<td></td><td></td>
 			<td class="label">Master list URLs:</td>
 			<td>
-			<!-- <select name=url_e size='1'>";
-//			<?php           
-					// 			    $file = file("../webservices/texts/master_lists.txt");
-					// 			    $num = count($file);
-					// 			    echo "<option value='none'>- - Choose an Master list URL - -</option>\n";
-					// 			    for($i=0 ; $i<$num ; $i++)
-					// 			    {
-					// 			        $example = trim($file[$i]);
-					// $name_to_show = basename($example);
-					// 			        if (strlen($example)>4){
-					// 			        $option = explode("\t", $example, 2);
-			        // if (count($option)>1){
-			                    // echo " <option class='pretty' value='".trim($option[0])."'> ".substr($name_to_show, 0, 88)." </option>\n";
-			        // }else{
-			                    // echo "<option value='".trim($option[0])."'> ".substr($name_to_show, 0, 88)." </option>\n";
-			        // }
-			    //     }
-			    // }
-			// ?>              
-			</select> -->
+				<select name="url_e" >
+					<option selected value='none' %> - - Choose an Master list URL - -</option>
+					<% @mfile_names.each do |mfile_name| %>
+						<option class='pretty'> <%= mfile_name %> </option>
+          <% end %>
+				</select>
 			</td>
 		</tr>
 		<tr>
@@ -46,12 +31,8 @@
 	    <td class="label">Enter Free Text:</td>
 	    <td><textarea rows='3' cols='51' name='freetext2'></textarea></td>
 		</tr>
-		<!-- <tr>
-			<td></td><td></td>
-	    <td></td>
-		</tr> -->
 	</table>
 	<br/>
 	<input type=submit value='Submit'>
-	<input type=hidden name=func value=submit>
+	<!-- <input type=hidden name=func value=submit> -->
 </form>

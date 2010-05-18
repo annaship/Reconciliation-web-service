@@ -57,7 +57,7 @@ td.label{
 	padding-left: 0.4em; 
 }
 
-/*option.pretty {padding-left: 0.1em;}*/
+option.pretty {padding-left: 0.1em;}
 
 /*div#wrapper {text-align: center;}*/
 table {
@@ -81,6 +81,7 @@ table.nice td{
 }
 table.nice td.label{
 	float: right;
+	padding-right: 0.8em;
 }
 table.nice a {
 	border-style: none;
