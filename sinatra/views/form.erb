@@ -1,4 +1,4 @@
-<form method="post" action="/submit">
+<form method="post" action="/submit" enctype="multipart/form-data" >
 	<table class='simple'>
 		<tr>
 			<th></th><th>List to compare</th><th></th><th>Master list</th>
@@ -17,9 +17,9 @@
 		</tr>
 		<tr>
 	    <td class="label">Upload File 1:</td>
-	    <td><INPUT TYPE=file NAME=upload1 SIZE=48 ACCEPT=text></td>
-	    <td class="label">Upload File 2:</td>
-	    <td><INPUT TYPE=file NAME=upload2 SIZE=48 ACCEPT=text></td></tr>
+	    <td><input type='file' name='upload1' size='48'/></td>
+	    <td class="label">Upload file 2:</td>
+	    <td><input type='file' name='upload2' size='48'/></td></tr>
 		<tr>
 	    <td class="label">Enter URL 1:</td>
 	    <td><input type=text size=58 name=url1></td>
