@@ -70,8 +70,19 @@ post '/submit' do
   end
 
   if (@url1 && @url2)
-    result = RestClient.get "http://localhost:4567/match?url1=#{@url1}&url2=#{@url2}"
+    result = RestClient.get URI.encode("http://localhost:4567/match?url1=#{@url1}&url2=#{@url2}")
+  # end
+  elsif (@freetext1 && @freetext2)
+    # URI.parse(URI.encode(adr))
+    # 
+    result = RestClient.get URI.encode("http://localhost:4567/match?text1=#{@freetext1}&text2=#{@freetext2}")
+  elsif (@freetext1 && @url2)
+    result = RestClient.get URI.encode("http://localhost:4567/match?text1=#{@freetext1}&url2=#{@url2}")
   end
+  
+  # key = freetext1, value = asda
+  # key = freetext2, value = sss
+  # 
 
 
   possible_names = result.split("\n");
