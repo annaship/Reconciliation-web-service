@@ -5,13 +5,15 @@ require 'sinatra'
 require 'haml'
 require 'rest_client'
 
-
 layout 'layout'
 
 ### Public
-@taxon_finder_web_service_url = "http://localhost:4567"; 
 
 get '/' do
+  erb :index
+end
+
+get '/recon' do
   @mfile_names = []
   @mfile_names = build_master_lists
   erb :form
@@ -40,11 +42,11 @@ post '/submit' do
   end
 
   if (@url1 && @url2)
-    result = RestClient.get URI.encode("http://localhost:4567/match?url1=#{@url1}&url2=#{@url2}")
+    result = RestClient.get URI.encode("http://localhost:3000/match?url1=#{@url1}&url2=#{@url2}")
   elsif (@freetext1 && @freetext2)
-    result = RestClient.get URI.encode("http://localhost:4567/match?text1=#{@freetext1}&text2=#{@freetext2}")
+    result = RestClient.get URI.encode("http://localhost:3000/match?text1=#{@freetext1}&text2=#{@freetext2}")
   elsif (@freetext1 && @url2)
-    result = RestClient.get URI.encode("http://localhost:4567/match?text1=#{@freetext1}&url2=#{@url2}")
+    result = RestClient.get URI.encode("http://localhost:3000/match?text1=#{@freetext1}&url2=#{@url2}")
   end
   possible_names = result.split("\n");
 	@arr = []
@@ -57,7 +59,7 @@ end
 
 def build_master_lists
   mfile_names = []
-  dir_listing = `ls ../webservices/texts/master_lists/*`
+  dir_listing = `ls #{File.dirname(__FILE__)}/../webservices/texts/master_lists/*`
   dir_listing.each do |mfile_name| 
     mfile_names << File.basename(mfile_name)
   end
@@ -66,9 +68,12 @@ end
 
 def upload_file(upload)
     time_tmp = Time.now.to_f.to_s   
-    filename = File.join("tmp/", time_tmp+upload[:filename])
+    filename = File.join("#{File.dirname(__FILE__)}/tmp/", time_tmp+upload[:filename])
     f = File.open(filename, 'wb') 
     f.write(upload[:tempfile].read)
     f.close
     url = "http://localhost/sinatra/"+filename
+    # print "filename = %s\n" % filename
+    # print "url = %s\n" % url
+    return url
 end
