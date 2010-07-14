@@ -1,6 +1,8 @@
 require 'ostruct'
 require 'socket'
 require File.dirname(__FILE__) + '/name'
+require File.dirname(__FILE__) + '/app_lib.rb'
+require 'yaml'
 
 class Object
    def blank?
@@ -16,14 +18,19 @@ class ReconicliationClient
   end
 
   def get(data)
-    socket.write data
+    # socket.write data
     # socket.puts data
-    output = ""
-    while !socket.eof? do
-      output = output + socket.read(1024)
-    end
-  
-    # socket.close 
+    data_length = data.length
+    socket.write("Content-length: #{data_length}\r\n")
+    socket.write(data)
+    socket.flush
+
+    # output = ""
+    # while !socket.eof? do
+    #   output = output + socket.read(1024)
+    # end
+    output = socket.read(data_length)
+    socket.close 
 
     # current_pos = 1
     # names_arr   = []
