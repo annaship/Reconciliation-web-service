@@ -1,19 +1,18 @@
 <h3>Neti Neti Taxon Finder</h3>     
 
+<br/>
+<p/> Total strings: <%= @i %>
 <br />
 <table class='nice'>
 	<tr>
     <th>Verbatim String (as appears in text)</th>
     <th>Scientific name</th>
 	</tr> 
-	<% @tf_arr.each do |name| 
-#		if (name.keys[0] && name.values[0] && !name.keys[0].empty? && !name.keys[0].empty?)	
-	%>
-		<tr>
-			<td><%= name.inspect %></td>
-		</tr>
+	<% if @tf_arr %>
+		<% @tf_arr.each do |name| %>
+			<tr><td><%= name[0] %></td><td><%= name[1] %></td></tr>
 		<% end %>
-	<%# end %>	
+	<% end %>
 </table>
 
 <br />

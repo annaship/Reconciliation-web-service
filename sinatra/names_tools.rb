@@ -4,7 +4,7 @@ require 'rubygems'
 require 'sinatra'
 require 'haml'
 require 'rest_client'
-require File.dirname(__FILE__) + '/../webservices/lib/neti_taxon_finder_client1'
+require File.dirname(__FILE__) + '/../webservices/lib/neti_taxon_finder_client'
 require 'nokogiri'
 require 'uri'
 require 'open-uri'
@@ -72,36 +72,62 @@ end
 #   #     }
 #   
 #   
-#   # print "@tf_arr = %s\n" % @tf_arr.inspect 
+#   # # print "@tf_arr = %s\n" % @tf_arr.inspect 
 #   # @tf_arr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><response><names xmlns:dwc=\"http://rs.tdwg.org/dwc/terms/\"><name><verbatim>Abra</verbatim><dwc:scientificName>Abra</dwc:scientificName><offsets><offset start=\"0\" end=\"3\"/></offsets></name><name><verbatim>Abra abra</verbatim><dwc:scientificName>Abra abra</dwc:scientificName><offsets><offset start=\"4\" end=\"12\"/></offsets></name><name><verbatim>Abra aequalis</verbatim><dwc:scientificName>Abra aequalis</dwc:scientificName><offsets><offset start=\"13\" end=\"25\"/></offsets></name><name><verbatim>Abra affinis</verbatim><dwc:scientificName>Abra affinis</dwc:scientificName><offsets><offset start=\"26\" end=\"37\"/></offsets></name><name><verbatim>Atys sandersoni</verbatim><dwc:scientificName>Atys sandersoni</dwc:scientificName><offsets><offset start=\"38\" end=\"52\"/></offsets></name></names></response>"
 #   
 #   erb :tf_result
 # end
 # -------------
-
-post '/find' do
-  puts "Ura, here"
-end
-
-# Array of allowed formats
-@@valid_formats = %w[xml json]
-@@valid_types = %w[text url encodedtext encodedurl]
-
+# Taxon Finder
 
  get '/find' do
+   # Array of allowed formats
+   @@valid_formats = %w[xml json html]
+   @@valid_types = %w[text url encodedtext encodedurl]
+
   puts "-" * 80
   puts params.inspect
   # {"upload"=>"", "text"=>"", "url"=>"http://localhost/text_good11.txt"}
   
   @@client = NetiTaxonFinderClient.new 'localhost' 
-  format = @@valid_formats.include?(params[:format]) ? params[:format] : "xml"
+  format = @@valid_formats.include?(params[:format]) ? params[:format] : "html"
+  
+  params.each do |key, value|
+    unless value.empty?
+      puts "\nvalue.not_empty.each: "
+      puts key.pretty_inspect
+      @content = value
+    end
+    # unless value.blank?
+    #   puts "\value.not_blank.each: "
+    #   puts key.pretty_inspect
+    # end
+    # unless value.nil?
+    #   puts "\value.not_nil.each: "
+    #   puts key.pretty_inspect
+    # end
+  end
+  
   begin
-    print "params[url] = %s\n" % params["url"]
-    print "params[:url] = %s\n" % params[:url]
-    content = params[:text] || params[:url] || params[:encodedtext] || params[:encodedurl]
-    content = params[:url]
-    
-    print "content1 = %s\n" % content
+    # if params[:text] 
+    #   puts "params[:text]\n"
+    # end
+    # if params[:url] 
+    #   puts "params[:url]\n"
+    # end
+    # if params[:encodedtext] 
+    #   puts "params[:encodedtext]\n"
+    # end
+    # if params[:encodedurl]
+    #   puts "params[:encodedurl]\n"
+    # end
+    # if params[:upload] 
+    #   puts "params[:url]\n"
+    # end
+    puts "I'm here! In begin"
+    # content = params[:text] || params[:url] || params[:encodedtext] || params[:encodedurl]
+    content = @content
+    print "content1 = %s\n" % content.pretty_inspect
   rescue
     status 400
   end
@@ -111,11 +137,11 @@ end
   content = Base64::decode64 content if params[:encodedtext] || params[:encodedurl]
   print "content3 = %s\n" % content
   # scrape if it's a url
-  if params[:encodedurl] || params[:url]
+  unless (params[:url].empty?)
     begin
-      response = open(content)
+      response = open(content.to_s)
       print "response = %s\n" % response
-      pure_text = open(content).read
+      pure_text = open(content.to_s).read
       print "pure_text = %s\n" % pure_text
     rescue
       status 400
@@ -128,18 +154,25 @@ end
     print "content5 = %s\n" % content
   end
   names = @@client.find(content)
-  print "names = "+names.inspect.to_s
-  @tf_arr = names
+  # print "names = "+names.inspect.to_s
+  tf_arr = {}
+  names.each do |n|
+    tf_arr[n.verbatim] = n.scientific
+    # print "n = %s, n.scientific = %s\nn.verbatim = %s\n" % [n.inspect.to_s, n.scientific, n.verbatim]
+    # puts n.instance_variables
+  end
+  @tf_arr = tf_arr
+  # puts @tf_arr.pretty_inspect
 
   if format == 'json'
     content_type 'application/json', :charset => 'utf-8'
     return Hash.from_xml("#{to_xml(names)}").to_json
   end
-  content_type 'text/xml', :charset => 'utf-8'
-  to_xml(names)
-
+  if format == 'xml'
+    content_type 'text/xml', :charset => 'utf-8'
+    to_xml(names)
+  end
   erb :tf_result
-  puts "-" * 80
 end
 
 def to_xml(names)
@@ -191,11 +224,12 @@ post '/submit' do
   end
 
   if (@url1 && @url2)
-    result = RestClient.get URI.encode("http://localhost:3000/match?url1=#{@url1}&url2=#{@url2}")
+    # result = RestClient.get URI.encode("http://localhost:4567/match?url1=http://localhost/text_bad.txt&url2=http://localhost/text_good.txt")
+    result = RestClient.get URI.encode("http://localhost:4567/match?url1=#{@url1}&url2=#{@url2}")
   elsif (@freetext1 && @freetext2)
-    result = RestClient.get URI.encode("http://localhost:3000/match?text1=#{@freetext1}&text2=#{@freetext2}")
+    result = RestClient.get URI.encode("http://localhost:4567/match?text1=#{@freetext1}&text2=#{@freetext2}")
   elsif (@freetext1 && @url2)
-    result = RestClient.get URI.encode("http://localhost:3000/match?text1=#{@freetext1}&url2=#{@url2}")
+    result = RestClient.get URI.encode("http://localhost:4567/match?text1=#{@freetext1}&url2=#{@url2}")
   end
   possible_names = result.split("\n");
 	@arr = []

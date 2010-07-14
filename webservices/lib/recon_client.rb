@@ -9,7 +9,7 @@ class Object
 end
 
 class ReconicliationClient
-  def initialize(host = 'localhost', port = 1234)
+  def initialize(host = 'localhost', port = 3002)
     @host = host
     @port = port
     socket

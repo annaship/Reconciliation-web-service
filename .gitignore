@@ -1,4 +1,13 @@
 *.txt
 *.gz
+.svn
+svn
 RCS
-
+*.log
+tmp
+*.tmp
+netineti.pyc
+netineti.py
+deploy.rb
+run_names_services
+.DS_Store

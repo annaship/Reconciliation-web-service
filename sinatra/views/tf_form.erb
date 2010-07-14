@@ -1,17 +1,17 @@
 <h3>Neti Neti Taxon Finder</h3>     
 
-<form method="get" action="/find" enctype="multipart/form-data" >
+<form method="post" action="/tf_result" enctype="multipart/form-data" >
 	<table class='simple'>
 		<tr>
 			<td class="label">Example URLs:</td>
-			<!-- <td>
+			<td>
 				<select name="url_e" >
-					<option selected value='none' %> - - Choose an Master list URL - -</option>
-					<%# @mfile_names.each do |mfile_name| %>
-						<option class='pretty'> <%#= mfile_name %> </option>
-          <%# end %>
+					<option selected value='none' %> - - Choose an Example URL - -</option>
+					<% @examples.each do |example| %>
+						<option class='pretty'> <%= example %> </option>
+          <% end %>
 				</select>
-			</td> -->
+			</td>
 		</tr>
 		<tr>
 	    <td class="label">Upload File:</td>
